@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>甜影强</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addCity()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="card-background-page">
+  <ion-card *ngFor="let weather of weathers">  
+    <img src="{{weather.pic}}"/>
+    <div class="card-title">{{weather.city}}</div>
+    <div class="card-subtitle">{{weather.temp}} {{weather.weather}}</div>
+  </ion-card>
+
+</ion-content>
