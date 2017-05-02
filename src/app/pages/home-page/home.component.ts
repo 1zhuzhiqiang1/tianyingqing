@@ -5,9 +5,9 @@ import { Storage } from '@ionic/storage';
 import { AddCityComponent } from '../add-city/add.city.component';
 
 @Component({
-  templateUrl: './hello-ionic.html'
+  templateUrl: './home.component.html'
 })
-export class HelloIonicPage {
+export class HomeComponent {
 	num;
 	weather;
 	weathers;

@@ -8,32 +8,44 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { AppComponent } from './app.component';
-import { HelloIonicPage } from './pages/hello-ionic/hello-ionic';
+// 首页
+import { HomeComponent } from './pages/home-page/home.component';
+// 城市列表页
 import { CityListPage } from './pages/city-list/city-list';
+// 许可天宽
 import { ClausePage } from './pages/clause/clause';
+// 添加城市
 import { AddCityComponent } from './pages/add-city/add.city.component';
+// 天气详情页 
+import { WeatherDetailComponent } from './pages/weather-detail-page/weather.detail.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HelloIonicPage,
+    HomeComponent,
     CityListPage,
     ClausePage,
-    AddCityComponent
+    AddCityComponent,
+    WeatherDetailComponent
   ],
   imports: [
     HttpModule,
     BrowserModule,
     IonicModule.forRoot(AppComponent),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     AppComponent,
-    HelloIonicPage,
+    HomeComponent,
     CityListPage,
     ClausePage,
-    AddCityComponent
+    AddCityComponent,
+    WeatherDetailComponent
   ],
   providers: [
     StatusBar,

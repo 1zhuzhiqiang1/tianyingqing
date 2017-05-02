@@ -28,13 +28,14 @@ export class AddCityComponent {
 		this.viewController.dismiss();
 	}
 
-	onPageWillEnter() {
+	ionViewWillEnter() {
 		this.storage.get('num').then((result) => {
      		console.log("num => " + result);
      		this.num = result;
      	});
 	}
 
+	// 
 	register() {
 		this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + this.city.cityname)
 	    	.subscribe(data => {
@@ -50,12 +51,12 @@ export class AddCityComponent {
 	    			this.storage.set('picture' + this.num, url);
 	    			this.toastCtrl.create({
                     	message: "添加成功！",
-                    	duration: 2000
+                    	duration: 1000
                 	}).present();
 	    		} else {
 	    			this.toastCtrl.create({
                     	message: "对不起，没有该城市的数据。",
-                    	duration: 2000
+                    	duration: 1000
                 	}).present();
 	    		}
 	    	}, error => {

@@ -10,18 +10,18 @@
 </ion-header>
 
 <ion-content>
-<ion-list>
-  <ion-item-sliding *ngFor="let weather of weathers">
-    <ion-item>
-        <h2>{{weather.city}}</h2>
-    </ion-item>
-    
-    <ion-item-options>
-      <button danger (click)="itemSelected(weather)">
-        <ion-icon name="close"></ion-icon>
-      </button>
-    </ion-item-options>
+  <ion-list>
+    <ion-item-sliding *ngFor="let weather of weathers">
+      <ion-item (click)="clickItem(weather)">
+          <h2>{{weather.city}}</h2>
+      </ion-item>
+      
+      <ion-item-options>
+        <button danger (click)="itemSelected(weather)">
+          <ion-icon class="c_city_list_item_close" name="close"></ion-icon>
+        </button>
+      </ion-item-options>
 
-  </ion-item-sliding>
-</ion-list>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

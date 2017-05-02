@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import { Platform, MenuController, NavController} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 
-import { HelloIonicPage } from './pages/hello-ionic/hello-ionic';
+import { HomeComponent } from './pages/home-page/home.component';
 import {CityListPage} from './pages/city-list/city-list';
 import {ClausePage} from './pages/clause/clause';
 
@@ -13,7 +13,7 @@ export class AppComponent {
   @ViewChild('content') content: NavController;
 
   // make HelloIonicPage the root (or first) page
-  rootPage: any = HelloIonicPage;
+  rootPage: any = HomeComponent;
   pages: Array<{title: string, component: any}>;
   // stroage: Storage;
 
@@ -25,7 +25,7 @@ export class AppComponent {
 
     // set our app's pages
     this.pages = [
-      { title: '甜影强', component: HelloIonicPage },
+      { title: '甜影强', component: HomeComponent },
       { title: '城市', component: CityListPage },
       { title: '许可条款', component: ClausePage }
     ];

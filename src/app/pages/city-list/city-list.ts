@@ -1,10 +1,14 @@
 import {Component} from '@angular/core';
-import {Http} from "@angular/http";
-import { Loading, Platform, NavController, ViewController,AlertController,ToastController } from "ionic-angular";
+import { Http } from "@angular/http";
+import { NavController,AlertController,ToastController } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 
+// 详情页
+import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.component';
+
 @Component({
-  templateUrl: './city-list.html'
+  templateUrl: './city-list.html',
+  styleUrls:['/pages/city-list/city-list.scss']
 })
 
 export class CityListPage {
@@ -15,8 +19,6 @@ export class CityListPage {
   	constructor(
   		private http: Http,
   		private navController: NavController,
-  		private viewController: ViewController,
-  		private platform: Platform,
   		private storage: Storage,
   		public alertCtrl: AlertController,
   		public toastCtrl: ToastController
@@ -30,6 +32,14 @@ export class CityListPage {
 		this.weather.temp = "";
 		this.weather.pic = "http://qiniu.ursb.me/image/city-1.png";
 
+  	}
+
+  	clickItem(item){
+  		// this.alertCtrl.create({
+  		// 	title:'甜影强',
+  		// 	message:'点击了一个城市'+item.city
+  		// }).present();
+  		this.navController.push(WeatherDetailComponent);
   	}
 
 	itemSelected(item){
