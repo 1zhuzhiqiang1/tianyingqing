@@ -1,21 +1,48 @@
 <ion-header>
 	<ion-navbar>
-		<ion-title>详情</ion-title>
+		<ion-title>{{weather.city}}</ion-title>
 	</ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="weather_detail">
 	<ion-slides pager>
-		<ion-slide style="background-color: green">
-	    	<h2>Slide 1</h2>
-	  	</ion-slide>
-
-	  	<ion-slide style="background-color: blue">
-	    	<h2>Slide 2</h2>
-	  	</ion-slide>
-
-	  	<ion-slide style="background-color: red">
-	    	<h2>Slide 3</h2>
-	  	</ion-slide>
+		<ion-slide class="page-1">
+			<div class="top">
+				<img class="img" src="http://fanyi.baidu.com/static/translation/img/header/logo_cbfea26.png" alt="">
+				<div class="box"></div>
+				<div class="top1">
+					<ion-row>
+						<ion-col>
+							<div class="wendu">
+								<span>{{weather.temperature}}</span>
+							</div>
+						</ion-col>
+						<ion-col>
+							<!-- <div class="dot"><span>o</span></div> -->
+							<div class="zhuangkuang">
+								<span class="tianqi">{{weather.weather}}</span><br>
+								<span class="weak">{{weather.week}}</span>
+							</div>
+						</ion-col>
+					</ion-row>
+				</div>
+				<div class="box"></div>
+				<div class="detail">
+					<ion-row>
+						<ion-col>
+							<ion-row><div>天气：{{weather.weather}}</div></ion-row>
+							<ion-row><div>空气：{{weather.airCondition}}</div></ion-row>
+							<ion-row><div>湿度：{{weather.temperature}}</div></ion-row>
+						</ion-col>
+						<ion-col>
+							<ion-row><div>运动：{{weather.exerciseIndex}}</div></ion-row>
+							<ion-row><div>适宜穿：{{weather.dressingIndex}}</div></ion-row>
+							<ion-row><div>洗衣服：{{weather.washIndex}}</div></ion-row>
+						</ion-col>
+					</ion-row>
+				</div>
+			</div>
+			<div class="center"></div>
+		</ion-slide>
 	</ion-slides>
 </ion-content>

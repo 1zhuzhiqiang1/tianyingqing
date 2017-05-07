@@ -1,66 +1,53 @@
 import {Component} from '@angular/core';
 import {Http} from "@angular/http";
-import { Loading, Modal, Platform, NavController, ViewController, ToastController } from "ionic-angular";
+import { ViewController, ToastController } from "ionic-angular";
 import { Storage } from '@ionic/storage';
+
+import { Weather } from '../model/weather/weather';
+import { WeatherService } from '../../../providers/weather-service';
+import { MyConst } from '../model/MyConst';
 
 @Component({
   templateUrl: './add.city.component.html',
   styleUrls:['/pages/add-city/add.city.component.scss']
 })
 export class AddCityComponent {
-	city;
-	num;
+	city:string;
+	cityName:string;
+	cityNum:number;
 
 	constructor(
 		private http: Http,
-		private navController: NavController,
   		private viewController: ViewController,
-  		private platform: Platform,
   		private toastCtrl: ToastController,
-  		private storage: Storage
-  		) {
-		
-		this.city = {};
-		this.city.cityname = "";
-	}
+  		private storage: Storage,
+  		private weatherService:WeatherService
+  	) {}
 
 	dismiss() {
 		this.viewController.dismiss();
 	}
 
 	ionViewWillEnter() {
-		this.storage.get('num').then((result) => {
+		this.storage.get(MyConst.CITY_NUM).then((result) => {
      		console.log("num => " + result);
-     		this.num = result;
+     		this.cityNum = result;
      	});
 	}
 
-	// 
 	register() {
-		this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + this.city.cityname)
-	    	.subscribe(data => {
-	    		console.log(data.json());
-	    		if (data.json().retCode == "200") {
-	    			this.num++;
-	    			var url = "http://qiniu.ursb.me/image/city-" + Math.floor(Math.random() * 4) + ".png";
-	    			console.log('url => ' + url);
-	    			this.storage.set('num', this.num);
-	    			this.storage.set('distrct' + this.num, data.json().result[0].distrct);
-	         		this.storage.set('weather' + this.num, data.json().result[0].weather);
-	         		this.storage.set('temperature' + this.num, data.json().result[0].temperature);
-	    			this.storage.set('picture' + this.num, url);
-	    			this.toastCtrl.create({
-                    	message: "添加成功！",
-                    	duration: 1000
-                	}).present();
-	    		} else {
-	    			this.toastCtrl.create({
+		this.weatherService.getWeather(this.cityName).then(result => {
+			if(result == null){
+				this.toastCtrl.create({
                     	message: "对不起，没有该城市的数据。",
                     	duration: 1000
                 	}).present();
-	    		}
-	    	}, error => {
-	      		console.log("400");
-	    }); 
+			}else{
+				this.toastCtrl.create({
+                    	message: "添加城市成功",
+                    	duration: 1000
+                	}).present();
+			}
+		});
 	}
 }

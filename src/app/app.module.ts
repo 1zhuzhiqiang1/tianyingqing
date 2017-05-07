@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule }   from '@angular/forms';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { HttpModule } from "@angular/http";
 
@@ -19,6 +20,7 @@ import { AddCityComponent } from './pages/add-city/add.city.component';
 // 天气详情页 
 import { WeatherDetailComponent } from './pages/weather-detail-page/weather.detail.component';
 
+import { WeatherService } from '../providers/weather-service';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { WeatherDetailComponent } from './pages/weather-detail-page/weather.deta
   imports: [
     HttpModule,
     BrowserModule,
+    FormsModule,
     IonicModule.forRoot(AppComponent),
     IonicStorageModule.forRoot({
       name: '__mydb',
@@ -50,7 +53,8 @@ import { WeatherDetailComponent } from './pages/weather-detail-page/weather.deta
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    WeatherService
   ]
 })
 export class AppModule {}

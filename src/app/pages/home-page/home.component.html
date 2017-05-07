@@ -13,10 +13,12 @@
 </ion-header>
 
 <ion-content padding class="card-background-page">
-  <ion-card *ngFor="let weather of weathers">  
-    <img src="{{weather.pic}}"/>
-    <div class="card-title">{{weather.city}}</div>
-    <div class="card-subtitle">{{weather.temp}} {{weather.weather}}</div>
+  <ion-card *ngFor="let homeModel of weathers">
+    <ion-card-content (click)="gotoDetail(homeModel.weather)">
+      <img src="{{homeModel.pic}}"/>
+      <div class="card-title">{{homeModel.weather.city}}</div>
+      <div class="card-subtitle">{{homeModel.weather.temperature}} {{homeModel.weather.weather}}</div>
+    </ion-card-content>
   </ion-card>
 
 </ion-content>

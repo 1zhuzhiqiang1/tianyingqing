@@ -1,0 +1,71 @@
+.weather_detail{;
+	background-color: gray;
+	.page-1{
+		// background-color: gray;
+		.box{
+			clear: both;
+		}
+		.top{
+			margin-top: -60%;
+			height: 110px;
+			.top1{
+				margin: 10px auto;
+			}
+			.img{
+				width:70%;
+				margin: 0 auto;
+			}
+			.wendu{
+				width: 250px;
+				height: 100%;
+				// background-color: white;
+				font-size: 100px;
+				float: left;
+				text-align: center;
+				span{
+					display: inline-block;
+				}
+			}
+			.dot{
+				width: 40px;
+				height: 100%;
+				font-size: 50px;
+				// background-color: blue;
+				float: left;
+				text-align: center;
+			}
+			.zhuangkuang{
+				width: 120px;
+				height: 100%;
+				font-size: 30px;
+				// background-color: pink;
+				float: left;
+				text-align: center;
+				span{
+					display: inline-block;
+					width: 100%;
+					text-align: left;
+					margin-top: 15px;
+				}
+				.weak{
+					margin-top: 30px;
+					font-size: 18px;
+				}
+			}
+			.detail{
+				width: 90%;
+				border: 1px solid #cccccc;
+				border-radius: 10px;
+				margin: 30px auto;
+				// background-color: pink;
+				div{
+					width: 100%;
+					text-align: center;
+				}
+			}
+		}
+	}
+	.c_wendu{
+		
+	}
+}

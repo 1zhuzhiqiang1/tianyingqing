@@ -1,87 +1,64 @@
 import {Component} from '@angular/core';
-import { Modal, Loading, Platform, NavController} from "ionic-angular";
+import { Modal, NavController} from "ionic-angular";
 import { Storage } from '@ionic/storage';
+import { ChangeDetectorRef } from '@angular/core'; 
 
 import { AddCityComponent } from '../add-city/add.city.component';
+import { HomeModel } from '../model/HomeModel';
+import { MyConst } from '../model/MyConst';
+// 详情页
+import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.component';
+
+import { WeatherService } from '../../../providers/weather-service';
 
 @Component({
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-	num;
-	weather;
-	weathers;
+	weathers:Array<HomeModel>;
 	
   	constructor(
   		private navController: NavController,
-  		private platform: Platform,
   		private storage: Storage,
+  		private cd: ChangeDetectorRef,
+  		private weatherService:WeatherService
   	) {
 		this.weathers = [];
-		this.weather = {};
-		this.weather.city = "";
-		this.weather.wea = "";
-		this.weather.temp = "";
-		this.weather.pic = "http://qiniu.ursb.me/image/city-1.png";
   	}
 
-  	ionViewWillEnter() {
-  		console.log('onPageWillEnter');
-        this.weathers = [];
+// ionic2生命周期地址--http://ionicframework.com/docs/api/navigation/NavController/
+  	ionViewDidLoad() {
+  		console.log('home-page:ionViewDidLoad');
 
-		this.storage.get('num').then((result) => {
-			console.log('num => ' + result);
-			this.num = result;
-			
-			for (var i = 1; i <= result; i++) {
+  		this.storage.get(MyConst.CITY_NUM).then(result => {
+          let size:number = result;
+          for (var i = 1; i <= size; i++) {
+            (function(i,storage,weathers){
+              storage.get(MyConst.WEATHER+'-'+i).then(result => {
+              let weatherInfo = result;
+              storage.get(MyConst.CITY_IMG+'-'+i).then(result => {
+                  let homeModel:HomeModel = new HomeModel(result,weatherInfo);
+                  weathers.push(homeModel);
+              });
+            });
+            })(i,this.storage,this.weathers);
+          }
+        });
 
-				var city = "";
-				var wea = "";
-				var temp = "";
-				var pic = "";
+	}
 
-				this.storage.get('distrct' + i).then((result) => {
-					city = result;
-					console.log(city);
-				});
-				this.storage.get('weather' + i).then((result) => {
-					console.log(result);
-					wea = result;
-				});
-				this.storage.get('temperature' + i).then((result) => {
-					console.log(result);
-					temp = result;
-				});
-				this.storage.get('picture' + i).then((result) => {
-					console.log(result);
-					pic = result;
-					var obj = new Weather(city, wea, temp, pic);
-					console.log(obj);
-					this.weathers.push(obj);
-				});
-			}
-		});
+	gotoDetail(weather){
+		console.log('gotoDetail：'+weather.city);
+		this.navController.push(WeatherDetailComponent,{
+  			'item':weather
+  		});
 	}
 
     ionViewDidEnter() {
-		console.log('weathers => ' + JSON.stringify(this.weathers));
+		// console.log('weathers => ' + this.weathers);
     }
 
     addCity() {
      	this.navController.push(AddCityComponent);
     }
-}
-
-class Weather {
-	city;
-	weather;
-	temp;
-	pic;
-
-	constructor(city, weather, temp, pic) {
-		this.city = city;
-		this.weather = weather;
-		this.temp = temp;
-		this.pic = pic;
-	}
 }

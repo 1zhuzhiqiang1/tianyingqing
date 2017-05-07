@@ -6,6 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { HttpModule } from "@angular/http";
 import { StatusBar } from '@ionic-native/status-bar';
@@ -20,6 +21,9 @@ import { CityListPage } from './pages/city-list/city-list';
 import { ClausePage } from './pages/clause/clause';
 // 添加城市
 import { AddCityComponent } from './pages/add-city/add.city.component';
+// 天气详情页 
+import { WeatherDetailComponent } from './pages/weather-detail-page/weather.detail.component';
+import { WeatherService } from '../providers/weather-service';
 var AppModule = (function () {
     function AppModule() {
     }
@@ -32,11 +36,13 @@ AppModule = __decorate([
             HomeComponent,
             CityListPage,
             ClausePage,
-            AddCityComponent
+            AddCityComponent,
+            WeatherDetailComponent
         ],
         imports: [
             HttpModule,
             BrowserModule,
+            FormsModule,
             IonicModule.forRoot(AppComponent),
             IonicStorageModule.forRoot({
                 name: '__mydb',
@@ -49,12 +55,14 @@ AppModule = __decorate([
             HomeComponent,
             CityListPage,
             ClausePage,
-            AddCityComponent
+            AddCityComponent,
+            WeatherDetailComponent
         ],
         providers: [
             StatusBar,
             SplashScreen,
-            { provide: ErrorHandler, useClass: IonicErrorHandler }
+            { provide: ErrorHandler, useClass: IonicErrorHandler },
+            WeatherService
         ]
     })
 ], AppModule);

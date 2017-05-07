@@ -3,8 +3,11 @@ import { Http } from "@angular/http";
 import { NavController,AlertController,ToastController } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 
+import { WeatherService } from '../../../providers/weather-service';
 // 详情页
 import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.component';
+import { Weather } from '../model/weather/weather';
+import { MyConst } from '../model/MyConst';
 
 @Component({
   templateUrl: './city-list.html',
@@ -13,35 +16,25 @@ import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.co
 
 export class CityListPage {
 	num;
-	weather;
-	weathers;
+	weather:Weather;
+	weathers:Array<Weather>;
 
   	constructor(
   		private http: Http,
   		private navController: NavController,
   		private storage: Storage,
   		public alertCtrl: AlertController,
-  		public toastCtrl: ToastController
-  		) {
-
-		this.weathers = [];
-		this.weather = {};
-		this.weather.id = 0;
-		this.weather.city = "";
-		this.weather.wea = "";
-		this.weather.temp = "";
-		this.weather.pic = "http://qiniu.ursb.me/image/city-1.png";
-
-  	}
+  		public toastCtrl: ToastController,
+  		private weatherService:WeatherService
+  		) {}
 
   	clickItem(item){
-  		// this.alertCtrl.create({
-  		// 	title:'甜影强',
-  		// 	message:'点击了一个城市'+item.city
-  		// }).present();
-  		this.navController.push(WeatherDetailComponent);
+  		this.navController.push(WeatherDetailComponent,{
+  			'item':item
+  		});
   	}
 
+// 取消关注
 	itemSelected(item){
 		this.alertCtrl.create({
       		title: '甜影强',
@@ -53,47 +46,17 @@ export class CityListPage {
 				{
 					text: '确定',
 					handler: () => {
-						var id = item.id;
-						this.storage.set('distrct' + id, "");
-						this.storage.set('weather' + id, "");
-						this.storage.set('temperature' + id, "");
-						this.storage.set('picture' + id, "");
-						this.storage.get('num').then((result) => {
-							console.log('num => ' + result);
-							this.storage.set('num', result --);
-							this.num = result;
-							this.weathers = [];
-							for (var i = 1; i <= result; i++) {
-
-								var city = "";
-								var wea = "";
-								var temp = "";
-								var pic = "";
-								var id = 0;
-
-								this.storage.get('distrct' + i).then((result) => {
-									city = result;
-									console.log(city);
-								});
-								this.storage.get('weather' + i).then((result) => {
-									console.log(result);
-									wea = result;
-								});
-								this.storage.get('temperature' + i).then((result) => {
-									console.log(result);
-									temp = result;
-								});
-								this.storage.get('picture' + i).then((result) => {
-									console.log(result);
-									pic = result;
-									id ++;
-									console.log("id => " + id);
-									var obj = new Weather(id, city, wea, temp, pic);
-									console.log(obj);
-									this.weathers.push(obj);
-								});
+						this.storage.get(MyConst.CITY_NUM).then(result => {
+							for (var i = 0; i < result; i++) {
+								if(item == this.weathers[i]){
+									this.storage.set(MyConst.WEATHER+'-'+i,null);
+									break;
+								}
 							}
+
 						});
+
+						
 						this.toastCtrl.create({
 	                    	message: "删除成功！",
 	                    	duration: 2000
@@ -104,67 +67,14 @@ export class CityListPage {
 		}).present();
 	}
 
-	ionViewWillEnter() {
-		console.log('city-list:onPageWillEnter');
-        this.weathers = [];
-
-	   	this.storage.get('num').then((result) => {
-		console.log('num => ' + result);
-		this.num = result;
-
-		for (var i = 1; i <= result; i++) {
-
-			var city = "";
-			var wea = "";
-			var temp = "";
-			var pic = "";
-			var id = 0;
-
-			this.storage.get('distrct' + i).then((result) => {
-				city = result;
-				console.log(city);
-			});
-			this.storage.get('weather' + i).then((result) => {
-				console.log(result);
-				wea = result;
-			});
-			this.storage.get('temperature' + i).then((result) => {
-				console.log(result);
-				temp = result;
-			});
-			this.storage.get('picture' + i).then((result) => {
-				console.log(result);
-				pic = result;
-				id ++;
-				console.log("id => " + id);
-				var obj = new Weather(id, city, wea, temp, pic);
-				console.log(obj);
-				this.weathers.push(obj);
-			});
-		}
-
-		});
+	ionViewDidLoad() {
+		console.log('city-list:ionViewDidLoad');
+        this.weatherService.getWeathersFromLocal().then(result => {
+        	this.weathers = result;
+        });
 	}
 	
     ionViewDidEnter() {
 		console.log('weathers => ' + JSON.stringify(this.weathers));
     }
-}
-
-
-class Weather {
-
-	city;
-	weather;
-	temp;
-	pic;
-	id;
-
-	constructor(id, city, weather, temp, pic) {
-		this.id = id;
-		this.city = city;
-		this.weather = weather;
-		this.temp = temp;
-		this.pic = pic;
-	}
 }
