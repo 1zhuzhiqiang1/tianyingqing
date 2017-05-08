@@ -115,7 +115,11 @@ export class HomeComponent {
         }
       });
     }, error => {
-      alert(error);
+      alert(JSON.stringify(error));
+    },{
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:3000
     });
   }
 
