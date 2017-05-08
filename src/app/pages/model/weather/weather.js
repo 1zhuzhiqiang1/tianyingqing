@@ -1,6 +1,5 @@
 var Weather = (function () {
-    function Weather(weather) {
-        var obj = JSON.parse(weather);
+    function Weather(obj) {
         this.airCondition = obj.airCondition;
         this.city = obj.city;
         this.coldIndex = obj.coldIndex;

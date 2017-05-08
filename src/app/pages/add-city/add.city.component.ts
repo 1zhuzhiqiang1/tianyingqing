@@ -34,10 +34,7 @@ export class AddCityComponent {
 	}
 
 	ionViewWillEnter() {
-		this.storage.get(MyConst.CITY_NUM).then((result) => {
-     		console.log("num => " + result);
-     		this.cityNum = result;
-     	});
+		
 	}
 
 	register() {

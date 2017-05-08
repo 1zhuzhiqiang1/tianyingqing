@@ -3,7 +3,7 @@
     <button ion-button menuToggle icon-only>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>甜影强</ion-title>
+    <ion-title>首页</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="addCity()">
         <ion-icon name="add"></ion-icon>
@@ -13,6 +13,18 @@
 </ion-header>
 
 <ion-content padding class="card-background-page">
+  <!-- 左下角的定位按钮 -->
+  <ion-fab right bottom>
+    <button ion-fab color="light" (click)="locate()">
+      <ion-icon name="ios-locate-outline"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-refresher>
+    <ion-refresher-content pullingIcon="arrow-dropdown"
+    pullingText="继续向下使劲拉"
+    refreshingSpinner="circles"
+    refreshingText="刷新中"></ion-refresher-content>
+  </ion-refresher>
   <ion-card *ngFor="let homeModel of weathers">
     <ion-card-content (click)="gotoDetail(homeModel.weather)">
       <img src="{{homeModel.pic}}"/>

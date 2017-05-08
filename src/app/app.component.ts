@@ -30,14 +30,6 @@ export class AppComponent {
     { title: '许可条款', component: ClausePage }
     ];
 
-    // this.geolocation.getCurrentPosition().then((resp) => {
-    //   // resp.coords.latitude
-    //   // resp.coords.longitude
-    //   console.log('latitude:'+resp.coords.latitude);
-    //   console.log('longitude:'+resp.coords.longitude);
-    // }).catch((error) => {
-    //   console.log('Error getting location', error);
-    // });
   }
 
   initializeApp() {

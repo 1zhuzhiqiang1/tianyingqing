@@ -14,7 +14,6 @@ import { Storage } from '@ionic/storage';
 import { WeatherService } from '../../../providers/weather-service';
 // 详情页
 import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.component';
-import { MyConst } from '../model/MyConst';
 var CityListPage = (function () {
     function CityListPage(http, navController, storage, alertCtrl, toastCtrl, weatherService) {
         this.http = http;
@@ -23,14 +22,37 @@ var CityListPage = (function () {
         this.alertCtrl = alertCtrl;
         this.toastCtrl = toastCtrl;
         this.weatherService = weatherService;
+        this.weathers = [];
     }
+    CityListPage.prototype.getWeatherIcon = function (weather) {
+        // let url:string = "https://zhuzhiqiang.github.io/tianyingqing/icons/";
+        var url = "assets/icons/";
+        if (weather.weather.indexOf('晴') >= 0) {
+            url += "sun.png";
+        }
+        else if (weather.weather.indexOf('多云') >= 0) {
+            url += "cloud.png";
+        }
+        else if (weather.weather.indexOf('雨') >= 0) {
+            url += "rain-icon-weather_128.png";
+        }
+        else if (weather.weather.indexOf('雷') >= 0) {
+            url += "lightning.png";
+        }
+        else if (weather.weather.indexOf('风') >= 0) {
+            url += "tornado-twister.png";
+        }
+        return url;
+    };
     CityListPage.prototype.clickItem = function (item) {
+        var picUrl = this.getWeatherIcon(item);
         this.navController.push(WeatherDetailComponent, {
-            'item': item
+            'item': item,
+            'icon-url': picUrl
         });
     };
     // 取消关注
-    CityListPage.prototype.itemSelected = function (item) {
+    CityListPage.prototype.itemSelected = function (weather) {
         var _this = this;
         this.alertCtrl.create({
             title: '甜影强',
@@ -42,14 +64,8 @@ var CityListPage = (function () {
                 {
                     text: '确定',
                     handler: function () {
-                        _this.storage.get(MyConst.CITY_NUM).then(function (result) {
-                            for (var i = 0; i < result; i++) {
-                                if (item == _this.weathers[i]) {
-                                    _this.storage.set(MyConst.WEATHER + '-' + i, null);
-                                    break;
-                                }
-                            }
-                        });
+                        _this.weatherService.deleteCity(weather);
+                        _this.getDatas();
                         _this.toastCtrl.create({
                             message: "删除成功！",
                             duration: 2000
@@ -59,12 +75,17 @@ var CityListPage = (function () {
             ]
         }).present();
     };
-    CityListPage.prototype.ionViewWillEnter = function () {
+    CityListPage.prototype.getDatas = function () {
         var _this = this;
-        console.log('city-list:onPageWillEnter');
-        this.weatherService.getWeathersFromLocal().then(function (result) {
-            _this.weathers = result;
+        this.weathers = [];
+        this.storage.forEach(function (value, key) {
+            var homeModel = JSON.parse(value);
+            _this.weathers.push(homeModel);
         });
+    };
+    CityListPage.prototype.ionViewDidLoad = function () {
+        console.log('city-list:ionViewDidLoad');
+        this.getDatas();
     };
     CityListPage.prototype.ionViewDidEnter = function () {
         console.log('weathers => ' + JSON.stringify(this.weathers));

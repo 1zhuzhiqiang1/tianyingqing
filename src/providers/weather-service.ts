@@ -29,8 +29,7 @@ import { HomeModel } from '../app/pages/model/HomeModel';
       let cityNum:number;
       return new Promise((resolve) => {
         console.log('开始请求网络数据');
-        this.storage.get(MyConst.CITY_NUM).then(result => {
-          this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + cityName).subscribe(data => {
+        this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + cityName).subscribe(data => {
             let jsonData = data.json();
             if (jsonData.retCode == "200") {
               let url = "http://qiniu.ursb.me/image/city-" + Math.floor(Math.random() * 4) + ".png";
@@ -47,9 +46,6 @@ import { HomeModel } from '../app/pages/model/HomeModel';
               duration: 1000
             }).present();
           });
-
-        });
-        
         
       });
     }

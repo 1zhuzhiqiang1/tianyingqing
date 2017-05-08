@@ -9,17 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Component } from '@angular/core';
 import { Http } from "@angular/http";
-import { ViewController, ToastController } from "ionic-angular";
+import { ViewController, ToastController, NavParams } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 import { WeatherService } from '../../../providers/weather-service';
 import { MyConst } from '../model/MyConst';
 var AddCityComponent = (function () {
-    function AddCityComponent(http, viewController, toastCtrl, storage, weatherService) {
+    function AddCityComponent(http, viewController, toastCtrl, storage, weatherService, navParams) {
         this.http = http;
         this.viewController = viewController;
         this.toastCtrl = toastCtrl;
         this.storage = storage;
         this.weatherService = weatherService;
+        this.navParams = navParams;
+        this.homePage = this.navParams.get('homePage');
+        console.log('homePage=' + this.homePage);
     }
     AddCityComponent.prototype.dismiss = function () {
         this.viewController.dismiss();
@@ -41,6 +44,7 @@ var AddCityComponent = (function () {
                 }).present();
             }
             else {
+                _this.homePage.update();
                 _this.toastCtrl.create({
                     message: "添加城市成功",
                     duration: 1000
@@ -59,7 +63,8 @@ AddCityComponent = __decorate([
         ViewController,
         ToastController,
         Storage,
-        WeatherService])
+        WeatherService,
+        NavParams])
 ], AddCityComponent);
 export { AddCityComponent };
 //# sourceMappingURL=add.city.component.js.map

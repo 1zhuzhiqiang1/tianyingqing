@@ -43,6 +43,8 @@ export class CityListPage {
 			url += "lightning.png";
 		}else if(weather.weather.indexOf('风') >= 0){
 			url += "tornado-twister.png";
+		}else{
+			url += "cloud.png";
 		}
 		return url;
 	}

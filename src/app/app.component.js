@@ -14,9 +14,10 @@ import { CityListPage } from './pages/city-list/city-list';
 import { ClausePage } from './pages/clause/clause';
 var AppComponent = (function () {
     // stroage: Storage;
-    function AppComponent(platform, menu) {
+    function AppComponent(platform, menu, http) {
         this.platform = platform;
         this.menu = menu;
+        this.http = http;
         // make HelloIonicPage the root (or first) page
         this.rootPage = HomeComponent;
         this.initializeApp();
@@ -47,7 +48,7 @@ AppComponent = __decorate([
         templateUrl: './app.component.html'
     }),
     __metadata("design:paramtypes", [Platform,
-        MenuController])
+        MenuController, Object])
 ], AppComponent);
 export { AppComponent };
 //# sourceMappingURL=app.component.js.map

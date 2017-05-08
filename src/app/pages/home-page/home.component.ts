@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
-import { Modal, NavController} from "ionic-angular";
+import { Modal, NavController } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 import { ChangeDetectorRef } from '@angular/core'; 
+import {Http} from "@angular/http";
 
 import { AddCityComponent } from '../add-city/add.city.component';
 import { HomeModel } from '../model/HomeModel';
@@ -23,7 +24,8 @@ export class HomeComponent {
     private navController: NavController,
     private storage: Storage,
     private cd: ChangeDetectorRef,
-    private weatherService:WeatherService
+    private weatherService:WeatherService,
+    public http: Http,
     ) {
     this.weathers = [];
     this.first = true;
@@ -97,4 +99,24 @@ export class HomeComponent {
       'homePage':this
     });
   }
+
+  //定位
+  locate(){
+    navigator.geolocation.getCurrentPosition( position => {
+      let latitude = position.coords.latitude;
+      let longitude = position.coords.longitude;
+      let url = "http://api.map.baidu.com/geocoder/v2/?ak=EB77c29b7b9800e5804ef458fbf3ac67&location="+latitude+","+longitude+"&output=json&pois=0";
+      this.http.get(url).subscribe(data => {
+        let jsonData = data.json();
+        console.log(jsonData);
+        if(jsonData.status == 0){
+          let cityName = jsonData.result.addressComponent.city;
+          alert("获取城市成功:"+cityName);
+        }
+      });
+    }, error => {
+      alert(error);
+    });
+  }
+
 }

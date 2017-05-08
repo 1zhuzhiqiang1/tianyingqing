@@ -22,41 +22,91 @@ var HomeComponent = (function () {
         this.cd = cd;
         this.weatherService = weatherService;
         this.weathers = [];
+        this.first = true;
     }
-    HomeComponent.prototype.ionViewWillEnter = function () {
+    // ionic2生命周期地址--http://ionicframework.com/docs/api/navigation/NavController/
+    HomeComponent.prototype.ionViewDidLoad = function () {
+        console.log('home-page:ionViewDidLoad');
+        if (this.first) {
+            this.refreshData();
+        }
+        this.getDatas();
+        // 开启定时器，5分钟刷新一次数据
+        // setInterval(this.refreshData(),10000);
+    };
+    HomeComponent.prototype.refreshData = function () {
         var _this = this;
-        console.log('home-page:onPageWillEnter');
-        this.weatherService.getWeathersFromLocal().then(function (result) {
-            console.log('获取到的结果' + result);
-            _this.weathers = result;
-            _this.cd.detectChanges();
-            console.log('weathers => ' + _this.weathers);
+        console.log('homepage:刷新数据');
+        this.storage.forEach(function (value, key) {
+            _this.weatherService.getWeather(key);
         });
-        // this.storage.get(MyConst.CITY_NUM).then((result) => {
-        // 	console.log('已经保存城市的数量是 => ' + result);
-        // 	this.cityNum = result;
-        // 	for (let i = 0; i < result; i++) {
-        // 		console.log('home-page:'+i);
-        // 		this.storage.get(MyConst.WEATHER+'-'+i).then(result => {
-        // 			if(result != null){
-        // 				// console.log(result);
-        // 				this.weathers.push(result);
-        // 			}
-        // 		});
-        // 	}
-        // });
+    };
+    HomeComponent.prototype.getDatas = function () {
+        var _this = this;
+        this.weathers = [];
+        this.storage.forEach(function (value, key) {
+            var homeModel = JSON.parse(value);
+            _this.weathers.push(homeModel);
+        });
+    };
+    HomeComponent.prototype.getWeatherIcon = function (weather) {
+        // let url:string = "https://zhuzhiqiang.github.io/tianyingqing/icons/";
+        var url = "assets/icons/";
+        if (weather.weather.indexOf('晴') >= 0) {
+            url += "sun.png";
+        }
+        else if (weather.weather.indexOf('多云') >= 0) {
+            url += "cloud.png";
+        }
+        else if (weather.weather.indexOf('雨') >= 0) {
+            url += "rain-icon-weather_128.png";
+        }
+        else if (weather.weather.indexOf('雷') >= 0) {
+            url += "lightning.png";
+        }
+        else if (weather.weather.indexOf('风') >= 0) {
+            url += "tornado-twister.png";
+        }
+        else {
+            url += "cloud.png";
+        }
+        return url;
     };
     HomeComponent.prototype.gotoDetail = function (weather) {
-        console.log('gotoDetail');
+        console.log('gotoDetail：' + weather.city);
+        var picUrl = this.getWeatherIcon(weather);
         this.navController.push(WeatherDetailComponent, {
-            'item': weather
+            'item': weather,
+            'icon-url': picUrl
         });
     };
     HomeComponent.prototype.ionViewDidEnter = function () {
-        // console.log('weathers => ' + this.weathers);
+    };
+    HomeComponent.prototype.update = function () {
+        this.getDatas();
     };
     HomeComponent.prototype.addCity = function () {
-        this.navController.push(AddCityComponent);
+        this.navController.push(AddCityComponent, {
+            'homePage': this
+        });
+    };
+    //定位
+    HomeComponent.prototype.locate = function () {
+        var _this = this;
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var url = "http://api.map.baidu.com/geocoder/v2/?ak=EB77c29b7b9800e5804ef458fbf3ac67&location=" + latitude + "," + longitude + "&output=json&pois=0";
+            _this.http.get(url).subscribe(function (data) {
+                var jsonData = data.json();
+                console.log(jsonData);
+                if (jsonData.status == 0) {
+                    var cityName = jsonData.result.addressComponent.city;
+                    alert("获取城市成功:" + cityName);
+                }
+            });
+        }, function (error) {
+        });
     };
     return HomeComponent;
 }());

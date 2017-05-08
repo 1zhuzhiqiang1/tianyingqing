@@ -14,6 +14,7 @@ import { ToastController } from "ionic-angular";
 import { MyConst } from '../app/pages/model/MyConst';
 import { Weather } from '../app/pages/model/weather/weather';
 import 'rxjs/add/operator/map';
+import { HomeModel } from '../app/pages/model/HomeModel';
 /*
   Generated class for the WeatherService provider.
 
@@ -33,17 +34,17 @@ var WeatherService = (function () {
         return new Promise(function (resolve) {
             console.log('开始请求网络数据');
             _this.storage.get(MyConst.CITY_NUM).then(function (result) {
-                cityNum = ++result;
                 _this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + cityName).subscribe(function (data) {
                     var jsonData = data.json();
-                    console.log(jsonData);
                     if (jsonData.retCode == "200") {
                         var url = "http://qiniu.ursb.me/image/city-" + Math.floor(Math.random() * 4) + ".png";
-                        console.log('url => ' + url);
-                        _this.storage.set(MyConst.CITY_NUM, cityNum);
-                        _this.storage.set(MyConst.CITY_NAME + '-' + cityNum, cityName);
-                        _this.storage.set(MyConst.WEATHER + '-' + cityNum, JSON.stringify(jsonData.result[0]));
+                        var obj = jsonData.result[0];
+                        var homeModel = new HomeModel(url, obj);
+                        _this.storage.set(obj.city, JSON.stringify(homeModel));
                         resolve(jsonData);
+                    }
+                    else {
+                        resolve(null);
                     }
                 }, function (error) {
                     _this.toastCtrl.create({
@@ -57,21 +58,29 @@ var WeatherService = (function () {
     // 获取本地存儲的數據
     WeatherService.prototype.getWeathersFromLocal = function () {
         var _this = this;
+        var weathers = [];
         return new Promise(function (resolve) {
-            var weathers = [];
             _this.storage.get(MyConst.CITY_NUM).then(function (result) {
-                for (var i = 1; i <= result; i++) {
-                    _this.storage.get(MyConst.WEATHER + '-' + i).then(function (result) {
-                        // console.log('getLocalweather:'+result);
-                        var weather;
-                        weather = new Weather(result);
-                        weathers.push(result);
-                    });
+                var size = result;
+                for (var i = 1; i <= size; i++) {
+                    (function (i, weather, resolve, storage) {
+                        storage.get(MyConst.WEATHER + '-' + i).then(function (result) {
+                            var weather = new Weather(result);
+                            weathers.push(weather);
+                            if (i >= size) {
+                                resolve(weathers);
+                            }
+                        });
+                    })(i, weathers, resolve, _this.storage);
                 }
-                console.log();
             });
-            resolve(weathers);
         });
+    };
+    //删除城市
+    WeatherService.prototype.deleteCity = function (weather) {
+        if (weather != null) {
+            this.storage.remove(weather.city);
+        }
     };
     return WeatherService;
 }());

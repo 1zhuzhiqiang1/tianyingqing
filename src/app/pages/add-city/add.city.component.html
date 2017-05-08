@@ -1,23 +1,15 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      添加城市
-    </ion-title>
-    <ion-buttons start>
-      <button (click)="dismiss()">
-        <span primary showWhen="ios">返回</span>
-        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
-      </button>
-    </ion-buttons>
+    <ion-title>添加城市</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-    <ion-item>
-        <ion-label>城市</ion-label>
-        <ion-input type="text" value="" [(ngModel)]="cityName"></ion-input>
-    </ion-item>
-    <div class="c_btn_ok">
-      <button class="c_btn_register" ion-button round (click)="register()">确定</button>
-    </div>
+<ion-content class="page-add-city">
+<div class="div_input">
+  <ion-item>
+    <ion-label>城市</ion-label>
+    <ion-input class="city-input" type="search" [(ngModel)]="cityName" clearInput=true></ion-input>
+  </ion-item>
+  <button class="c_btn_register" ion-button (click)="register()">确定</button>
+</div>
 </ion-content>

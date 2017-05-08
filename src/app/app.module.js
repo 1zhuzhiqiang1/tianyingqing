@@ -43,7 +43,11 @@ AppModule = __decorate([
             HttpModule,
             BrowserModule,
             FormsModule,
-            IonicModule.forRoot(AppComponent),
+            IonicModule.forRoot(AppComponent, {
+                mode: "ios",
+                backButtonText: '返回',
+                swipeBackEnabled: true
+            }),
             IonicStorageModule.forRoot({
                 name: '__mydb',
                 driverOrder: ['sqlite', 'indexeddb', 'websql']
