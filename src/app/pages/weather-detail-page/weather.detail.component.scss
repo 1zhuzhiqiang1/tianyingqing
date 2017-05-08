@@ -1,7 +1,7 @@
-.weather_detail{;
-	background-color: gray;
+.weather_detail{
+	// background-color: gray;
 	.page-1{
-		// background-color: gray;
+		background-color: #EEEEEE;
 		.box{
 			clear: both;
 		}
@@ -12,14 +12,12 @@
 				margin: 10px auto;
 			}
 			.img{
-				width:70%;
+				// width:70%;
 				margin: 0 auto;
 			}
 			.wendu{
-				width: 250px;
-				height: 100%;
-				// background-color: white;
-				font-size: 100px;
+				width: 100%;
+				font-size: 70px;
 				float: left;
 				text-align: center;
 				span{
@@ -35,8 +33,7 @@
 				text-align: center;
 			}
 			.zhuangkuang{
-				width: 120px;
-				height: 100%;
+				width: 100%;
 				font-size: 30px;
 				// background-color: pink;
 				float: left;
@@ -45,10 +42,8 @@
 					display: inline-block;
 					width: 100%;
 					text-align: left;
-					margin-top: 15px;
 				}
 				.weak{
-					margin-top: 30px;
 					font-size: 18px;
 				}
 			}

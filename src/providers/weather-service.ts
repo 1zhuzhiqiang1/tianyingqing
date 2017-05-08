@@ -7,6 +7,8 @@ import { MyConst } from '../app/pages/model/MyConst';
 import { Weather } from '../app/pages/model/weather/weather';
 import 'rxjs/add/operator/map';
 
+import { HomeModel } from '../app/pages/model/HomeModel';
+
 /*
   Generated class for the WeatherService provider.
 
@@ -26,22 +28,18 @@ import 'rxjs/add/operator/map';
     getWeather(cityName:string): Promise<Weather[]> {
       let cityNum:number;
       return new Promise((resolve) => {
-
         console.log('开始请求网络数据');
         this.storage.get(MyConst.CITY_NUM).then(result => {
-          cityNum = ++result;
-
           this.http.get("http://apicloud.mob.com/v1/weather/query?key=f1fb6815bbb6&city=" + cityName).subscribe(data => {
             let jsonData = data.json();
-            console.log(jsonData);
             if (jsonData.retCode == "200") {
-              var url = "http://qiniu.ursb.me/image/city-" + Math.floor(Math.random() * 4) + ".png";
-              console.log('url => ' + url);
-               this.storage.set(MyConst.CITY_NUM, cityNum);
-               this.storage.set(MyConst.CITY_NAME+'-'+cityNum,cityName);
-               this.storage.set(MyConst.CITY_IMG+'-'+cityNum,url);
-               this.storage.set(MyConst.WEATHER+'-'+cityNum,JSON.stringify(jsonData.result[0]));
+              let url = "http://qiniu.ursb.me/image/city-" + Math.floor(Math.random() * 4) + ".png";
+              let obj = jsonData.result[0];
+              let homeModel:HomeModel = new HomeModel(url,obj);
+              this.storage.set(obj.city,JSON.stringify(homeModel));
               resolve(jsonData);
+            }else{
+              resolve(null);
             }
           }, error => {
             this.toastCtrl.create({
@@ -80,6 +78,13 @@ import 'rxjs/add/operator/map';
       }
       );
 
+    }
+
+    //删除城市
+    deleteCity(weather){
+      if(weather != null){
+        this.storage.remove(weather.city);
+      }
     }
 
   }

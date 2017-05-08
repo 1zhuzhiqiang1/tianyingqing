@@ -20,8 +20,7 @@ export class Weather {
 	week:string;	//星期
 	wind:string;	//风力
 
-	constructor(weather){
-		let obj = JSON.parse(weather);
+	constructor(obj){
 		this.airCondition = obj.airCondition;
 		this.city = obj.city;
 		this.coldIndex = obj.coldIndex;

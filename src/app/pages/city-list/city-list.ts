@@ -8,73 +8,91 @@ import { WeatherService } from '../../../providers/weather-service';
 import { WeatherDetailComponent } from '../weather-detail-page/weather.detail.component';
 import { Weather } from '../model/weather/weather';
 import { MyConst } from '../model/MyConst';
+import { HomeModel } from '../model/HomeModel';
 
 @Component({
-  templateUrl: './city-list.html',
-  styleUrls:['/pages/city-list/city-list.scss']
+	templateUrl: './city-list.html',
+	styleUrls:['/pages/city-list/city-list.scss']
 })
 
 export class CityListPage {
-	num;
-	weather:Weather;
-	weathers:Array<Weather>;
+	weathers:Array<HomeModel>;
 
-  	constructor(
-  		private http: Http,
-  		private navController: NavController,
-  		private storage: Storage,
-  		public alertCtrl: AlertController,
-  		public toastCtrl: ToastController,
-  		private weatherService:WeatherService
-  		) {}
+	constructor(
+		private http: Http,
+		private navController: NavController,
+		private storage: Storage,
+		public alertCtrl: AlertController,
+		public toastCtrl: ToastController,
+		private weatherService:WeatherService
+		) {
+		this.weathers = [];
+	}
 
-  	clickItem(item){
-  		this.navController.push(WeatherDetailComponent,{
-  			'item':item
-  		});
-  	}
 
-// 取消关注
-	itemSelected(item){
+	getWeatherIcon(weather): string{
+		// let url:string = "https://zhuzhiqiang.github.io/tianyingqing/icons/";
+		let url:string = "assets/icons/";
+		if(weather.weather.indexOf('晴') >= 0){
+			url += "sun.png";
+		}else if(weather.weather.indexOf('多云') >= 0){
+			url += "cloud.png";
+		}else if(weather.weather.indexOf('雨') >= 0){
+			url += "rain-icon-weather_128.png";
+		}else if(weather.weather.indexOf('雷') >= 0){
+			url += "lightning.png";
+		}else if(weather.weather.indexOf('风') >= 0){
+			url += "tornado-twister.png";
+		}
+		return url;
+	}
+
+	clickItem(item){
+		let picUrl = this.getWeatherIcon(item);
+		this.navController.push(WeatherDetailComponent,{
+			'item':item,
+			'icon-url':picUrl
+		});
+	}
+
+	// 取消关注
+	itemSelected(weather){
 		this.alertCtrl.create({
-      		title: '甜影强',
-      		message: '你确定要取消关注该城市的天气信息吗？',
+			title: '甜影强',
+			message: '你确定要取消关注该城市的天气信息吗？',
 			buttons: [
-				{
-				  	text: '取消',
-				},
-				{
-					text: '确定',
-					handler: () => {
-						this.storage.get(MyConst.CITY_NUM).then(result => {
-							for (var i = 0; i < result; i++) {
-								if(item == this.weathers[i]){
-									this.storage.set(MyConst.WEATHER+'-'+i,null);
-									break;
-								}
-							}
-
-						});
-
-						
-						this.toastCtrl.create({
-	                    	message: "删除成功！",
-	                    	duration: 2000
-	                	}).present();
-					}
+			{
+				text: '取消',
+			},
+			{
+				text: '确定',
+				handler: () => {
+					this.weatherService.deleteCity(weather);
+					this.getDatas();
+					this.toastCtrl.create({
+						message: "删除成功！",
+						duration: 2000
+					}).present();
 				}
+			}
 			]
 		}).present();
 	}
 
+	getDatas(){
+		this.weathers = [];
+		this.storage.forEach((value,key) => {
+			let homeModel:HomeModel = JSON.parse(value);
+			this.weathers.push(homeModel);
+		});
+	}
+
 	ionViewDidLoad() {
 		console.log('city-list:ionViewDidLoad');
-        this.weatherService.getWeathersFromLocal().then(result => {
-        	this.weathers = result;
-        });
+		this.getDatas();
 	}
 	
-    ionViewDidEnter() {
+	ionViewDidEnter() {
 		console.log('weathers => ' + JSON.stringify(this.weathers));
-    }
+	}
 }

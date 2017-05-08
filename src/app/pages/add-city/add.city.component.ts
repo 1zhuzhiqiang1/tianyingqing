@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Http} from "@angular/http";
-import { ViewController, ToastController } from "ionic-angular";
+import { ViewController, ToastController, NavParams } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 
 import { Weather } from '../model/weather/weather';
@@ -15,14 +15,19 @@ export class AddCityComponent {
 	city:string;
 	cityName:string;
 	cityNum:number;
+	homePage;
 
 	constructor(
 		private http: Http,
   		private viewController: ViewController,
   		private toastCtrl: ToastController,
   		private storage: Storage,
-  		private weatherService:WeatherService
-  	) {}
+  		private weatherService:WeatherService,
+  		private navParams: NavParams
+  	) {
+  		this.homePage = this.navParams.get('homePage');
+  		console.log('homePage='+this.homePage);
+  	}
 
 	dismiss() {
 		this.viewController.dismiss();
@@ -43,6 +48,7 @@ export class AddCityComponent {
                     	duration: 1000
                 	}).present();
 			}else{
+				this.homePage.update();
 				this.toastCtrl.create({
                     	message: "添加城市成功",
                     	duration: 1000

@@ -11,13 +11,13 @@
 
 <ion-content>
   <ion-list>
-    <ion-item-sliding *ngFor="let weather of weathers">
-      <ion-item (click)="clickItem(weather)">
-          <h2>{{weather.city}}</h2>
+    <ion-item-sliding *ngFor="let homeModel of weathers;let i=index">
+      <ion-item (click)="clickItem(homeModel.weather)">
+          <h2>{{homeModel.weather.city}}</h2>
       </ion-item>
       
       <ion-item-options>
-        <button danger (click)="itemSelected(weather)">
+        <button danger (click)="itemSelected(homeModel.weather)">
           <ion-icon class="c_city_list_item_close" name="close"></ion-icon>
         </button>
       </ion-item-options>

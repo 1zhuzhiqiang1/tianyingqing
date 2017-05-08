@@ -19,22 +19,31 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private menu: MenuController
-  ) {
+    private menu: MenuController,
+    ) {
     this.initializeApp();
 
     // set our app's pages
     this.pages = [
-      { title: '甜影强', component: HomeComponent },
-      { title: '城市', component: CityListPage },
-      { title: '许可条款', component: ClausePage }
+    { title: '甜影强', component: HomeComponent },
+    { title: '城市', component: CityListPage },
+    { title: '许可条款', component: ClausePage }
     ];
+
+    // this.geolocation.getCurrentPosition().then((resp) => {
+    //   // resp.coords.latitude
+    //   // resp.coords.longitude
+    //   console.log('latitude:'+resp.coords.latitude);
+    //   console.log('longitude:'+resp.coords.longitude);
+    // }).catch((error) => {
+    //   console.log('Error getting location', error);
+    // });
   }
 
   initializeApp() {
     this.platform.ready().then(
       () => {}
-    );
+      );
   }
 
   openPage(page) {

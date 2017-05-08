@@ -15,50 +15,86 @@ import { WeatherService } from '../../../providers/weather-service';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
+
 	weathers:Array<HomeModel>;
-	
-  	constructor(
-  		private navController: NavController,
-  		private storage: Storage,
-  		private cd: ChangeDetectorRef,
-  		private weatherService:WeatherService
-  	) {
-		this.weathers = [];
-  	}
+  first:boolean;
 
-// ionic2生命周期地址--http://ionicframework.com/docs/api/navigation/NavController/
-  	ionViewDidLoad() {
-  		console.log('home-page:ionViewDidLoad');
+  constructor(
+    private navController: NavController,
+    private storage: Storage,
+    private cd: ChangeDetectorRef,
+    private weatherService:WeatherService
+    ) {
+    this.weathers = [];
+    this.first = true;
+  }
 
-  		this.storage.get(MyConst.CITY_NUM).then(result => {
-          let size:number = result;
-          for (var i = 1; i <= size; i++) {
-            (function(i,storage,weathers){
-              storage.get(MyConst.WEATHER+'-'+i).then(result => {
-              let weatherInfo = result;
-              storage.get(MyConst.CITY_IMG+'-'+i).then(result => {
-                  let homeModel:HomeModel = new HomeModel(result,weatherInfo);
-                  weathers.push(homeModel);
-              });
-            });
-            })(i,this.storage,this.weathers);
-          }
-        });
-
-	}
-
-	gotoDetail(weather){
-		console.log('gotoDetail：'+weather.city);
-		this.navController.push(WeatherDetailComponent,{
-  			'item':weather
-  		});
-	}
-
-    ionViewDidEnter() {
-		// console.log('weathers => ' + this.weathers);
+  // ionic2生命周期地址--http://ionicframework.com/docs/api/navigation/NavController/
+  ionViewDidLoad() {
+    console.log('home-page:ionViewDidLoad');
+    if(this.first){
+      this.refreshData();
     }
+    this.getDatas();
 
-    addCity() {
-     	this.navController.push(AddCityComponent);
+    // 开启定时器，5分钟刷新一次数据
+    // setInterval(this.refreshData(),10000);
+  }
+
+  refreshData(){
+    console.log('homepage:刷新数据');
+    this.storage.forEach( (value,key) => {
+      this.weatherService.getWeather(key);
+    } );
+  }
+
+  getDatas(){
+    this.weathers = [];
+    this.storage.forEach((value,key) => {
+      let homeModel:HomeModel = JSON.parse(value);
+      this.weathers.push(homeModel);
+    });
+  }
+
+  getWeatherIcon(weather): string{
+    // let url:string = "https://zhuzhiqiang.github.io/tianyingqing/icons/";
+    let url:string = "assets/icons/";
+    if(weather.weather.indexOf('晴') >= 0){
+      url += "sun.png";
+    }else if(weather.weather.indexOf('多云') >= 0){
+      url += "cloud.png";
+    }else if(weather.weather.indexOf('雨') >= 0){
+      url += "rain-icon-weather_128.png";
+    }else if(weather.weather.indexOf('雷') >= 0){
+      url += "lightning.png";
+    }else if(weather.weather.indexOf('风') >= 0){
+      url += "tornado-twister.png";
+    }else{
+      url += "cloud.png";
     }
+    return url;
+  }
+
+  gotoDetail(weather){
+    console.log('gotoDetail：'+weather.city);
+    let picUrl:string = this.getWeatherIcon(weather);
+    this.navController.push(WeatherDetailComponent,{
+      'item':weather,
+      'icon-url':picUrl
+    });
+  }
+
+  ionViewDidEnter() {
+
+  }
+
+  update(){
+    this.getDatas();
+  }
+
+  addCity() {
+    this.navController.push(AddCityComponent,{
+      'homePage':this
+    });
+  }
 }
