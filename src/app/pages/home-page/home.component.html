@@ -19,11 +19,12 @@
       <ion-icon name="ios-locate-outline"></ion-icon>
     </button>
   </ion-fab>
-  <ion-refresher>
-    <ion-refresher-content pullingIcon="arrow-dropdown"
-    pullingText="继续向下使劲拉"
-    refreshingSpinner="circles"
-    refreshingText="刷新中"></ion-refresher-content>
+  <ion-refresher pullMax=250 (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content 
+      pullingIcon="arrow-dropdown"
+      pullingText="继续向下使劲拉"
+      refreshingSpinner="circles"
+      refreshingText="刷新中"></ion-refresher-content>
   </ion-refresher>
   <ion-card *ngFor="let homeModel of weathers">
     <ion-card-content (click)="gotoDetail(homeModel.weather)">

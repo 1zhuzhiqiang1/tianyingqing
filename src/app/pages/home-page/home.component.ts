@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { Modal, NavController } from "ionic-angular";
+import { Modal, NavController, AlertController } from "ionic-angular";
 import { Storage } from '@ionic/storage';
 import { ChangeDetectorRef } from '@angular/core'; 
 import {Http} from "@angular/http";
@@ -26,10 +26,19 @@ export class HomeComponent {
     private cd: ChangeDetectorRef,
     private weatherService:WeatherService,
     public http: Http,
+    private alertCtrl: AlertController,
     ) {
     this.weathers = [];
     this.first = true;
   }
+
+  doRefresh(refresher) {
+    this.refreshData();
+    setTimeout(()=>{
+      refresher.complete();
+    },1000);
+  }
+
 
   // ionic2生命周期地址--http://ionicframework.com/docs/api/navigation/NavController/
   ionViewDidLoad() {
@@ -37,17 +46,24 @@ export class HomeComponent {
     if(this.first){
       this.refreshData();
     }
-    this.getDatas();
 
-    // 开启定时器，5分钟刷新一次数据
-    // setInterval(this.refreshData(),10000);
   }
 
   refreshData(){
     console.log('homepage:刷新数据');
-    this.storage.forEach( (value,key) => {
-      this.weatherService.getWeather(key);
-    } );
+    this.storage.length().then(size => {
+      this.storage.forEach( (value,key,iterationNumber) => {
+        if(size == iterationNumber){
+          this.weatherService.getWeather(key).then( result => {
+            this.first = false;
+            this.getDatas();
+            console.log('刷新成功');
+          });
+        }else{
+          this.weatherService.getWeather(key);
+        }
+      } );
+    });
   }
 
   getDatas(){
@@ -91,7 +107,7 @@ export class HomeComponent {
   }
 
   update(){
-    this.getDatas();
+    this.refreshData();
   }
 
   addCity() {
@@ -111,7 +127,21 @@ export class HomeComponent {
         console.log(jsonData);
         if(jsonData.status == 0){
           let cityName = jsonData.result.addressComponent.city;
-          alert("获取城市成功:"+cityName);
+          cityName = cityName.substr(0,cityName.length-1);
+          this.alertCtrl.create({
+            title: '天气',
+            message: '当前的城市是'+cityName+','+'要切换吗?',
+            buttons: [{text: '取消'},
+            {
+              text: '确定',
+              handler: () => {
+                this.weatherService.getWeather(cityName).then( result => {
+                  this.getDatas();
+                });
+              }
+            }
+            ]
+          }).present();
         }
       });
     }, error => {

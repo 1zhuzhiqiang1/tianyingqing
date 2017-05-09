@@ -10,52 +10,60 @@ import {Weather} from '../model/weather/weather';
 export class WeatherDetailComponent {
 	@ViewChild('chartBar') chartBar: ElementRef;
 
-	weather:Weather;
+	weather;
 	picUrl:string;
+	futureWeeks = [];
+	wenduArray = [];
 
 	constructor(
 		private navParams: NavParams
-	){
+		){
 		this.weather = this.navParams.get('item');
 		this.picUrl = this.navParams.get('icon-url');
+		let future = this.weather.future;
+		for (let i=0;i<future.length;i++) {
+			this.futureWeeks.push(future[i].week);
+			this.wenduArray.push(future[i].temperature.substr(0,2));
+		}
 		console.log("传递来的数据对象是："+JSON.stringify(this.weather));
 	}
 
+	share(){
+		
+	}
+
 	ionViewDidEnter() {
-		Chart.Bar(this.chartBar.nativeElement.getContext("2d"), {
-			data: {
-				labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+		Chart.Line(this.chartBar.nativeElement.getContext("2d"),{
+			data:{
+				labels: this.futureWeeks,
 				datasets: [{
-					label: '呵呵',
-					data: [12, 19, 3, 5, 2, 3],
-					backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)'
-					],
-					borderColor: [
-					'rgba(255,99,132,1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)'
-					],
-					borderWidth: 1
-				}]
-			},
-			options: {
-				scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero: true
-						}
-					}]
+					label: "温度",
+					fill: false,
+					lineTension: 0.1,
+					backgroundColor: "rgba(75,192,192,0.4)",
+					borderColor: "rgba(75,192,192,1)",
+					borderCapStyle: 'butt',
+					borderDash: [],
+					borderDashOffset: 0.0,
+					borderJoinStyle: 'miter',
+					pointBorderColor: "rgba(75,192,192,1)",
+					pointBackgroundColor: "#fff",
+					pointBorderWidth: 1,
+					pointHoverRadius: 5,
+					pointHoverBackgroundColor: "rgba(75,192,192,1)",
+					pointHoverBorderColor: "rgba(220,220,220,1)",
+					pointHoverBorderWidth: 2,
+					pointRadius: 1,
+					pointHitRadius: 10,
+					data: this.wenduArray,
+					spanGaps: false,
+				}
+				],
+				options:{
+					scaleStartValue:10
 				}
 			}
 		});
+
 	}
 }

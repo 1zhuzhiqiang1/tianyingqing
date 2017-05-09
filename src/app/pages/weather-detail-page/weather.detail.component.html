@@ -1,6 +1,11 @@
 <ion-header>
 	<ion-navbar>
 		<ion-title>{{weather.city}}</ion-title>
+		<ion-buttons end>
+			<button ion-button ion-only (click)="share()">
+				<ion-icon name="md-share"></ion-icon>
+			</button>
+		</ion-buttons>
 	</ion-navbar>
 </ion-header>
 
@@ -44,7 +49,8 @@
 			</div>
 		</ion-slide>
 		<!-- 未来几天的天气 -->
-		<ion-slide>
+		<ion-slide class="page-2">
+			<div>未来天气</div>
 			<div padding-vertical>
 				<canvas #chartBar height="200"></canvas>
 			</div>
