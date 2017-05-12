@@ -79,4 +79,5 @@
     <plugin name="cordova-plugin-geolocation" spec="~2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="请求使用地理位置" />
     </plugin>
+    <plugin name="cordova-plugin-share" spec="/Users/anyware/Documents/MyProject/Cordova/share/sharePlugin" />
 </widget>

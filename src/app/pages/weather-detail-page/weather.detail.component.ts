@@ -2,7 +2,9 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 import { Chart } from 'chart.js'; // 导入chart.js
 
-import {Weather} from '../model/weather/weather';
+import { Weather } from '../model/weather/weather';
+
+declare var share;
 
 @Component({
 	templateUrl:'weather.detail.component.html'
@@ -29,7 +31,14 @@ export class WeatherDetailComponent {
 	}
 
 	share(){
-		
+		let shareContent = '城市:'+this.weather.city+'\n';
+		shareContent += '更新时间:'+this.weather.updateTime+'\n';
+		shareContent += '星期:'+this.weather.week+'\n';
+		shareContent += '天气:'+this.weather.weather+'\n';
+		shareContent += '风力:'+this.weather.wind+'\n';
+		shareContent += '适宜穿戴:'+this.weather.dressingIndex+'\n';
+		shareContent += '外出活动:'+this.weather.exerciseIndex+'\n';
+		share.share(shareContent);
 	}
 
 	ionViewDidEnter() {
