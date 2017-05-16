@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import { Platform, MenuController, NavController} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomeComponent } from './pages/home-page/home.component';
 import {CityListPage} from './pages/city-list/city-list';
@@ -20,6 +21,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private menu: MenuController,
+    private splashScreen: SplashScreen
     ) {
     this.initializeApp();
 
@@ -33,9 +35,13 @@ export class AppComponent {
   }
 
   initializeApp() {
-    this.platform.ready().then(
-      () => {}
-      );
+    this.platform.ready().then(() => {
+      this.splashScreen.hide();
+    });
+  }
+
+  ionViewDidLoad(){
+    
   }
 
   openPage(page) {
