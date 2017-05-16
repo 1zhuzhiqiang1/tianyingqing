@@ -2,37 +2,31 @@
 
  甜影强，ionic2。
 
+## NPM set TAOBAO registry
+```bash
+$ npm config set registry https://registry.npm.taobao.org
+```
+
 ## Installation
 
 ### Installing Ionic
 
 ```bash
-$ npm install -g ionic@beta
+$ npm install -g ionic cordova
 ```
 
 To run your app, cd into the directory that was created and then run the ionic serve command:
 
 ```bash
 $ cd sunnybaby
+$ npm install
 $ ionic serve
 ```
 
-### Building to a Device
+### Running Your App
 
 ```bash
-$ sudo npm install -g cordova
-```
-
-### Building for iOS
-
-```bash
-$ ionic build ios
-```
-
-### Building for Android
-
-```bash
-$ ionic build Android
+$ ionic run android --device
 ```
 
 
