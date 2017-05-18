@@ -23,7 +23,7 @@ var AppComponent = (function () {
         this.initializeApp();
         // set our app's pages
         this.pages = [
-            { title: '甜影强', component: HomeComponent },
+            { title: '首页', component: HomeComponent },
             { title: '城市', component: CityListPage },
             { title: '许可条款', component: ClausePage }
         ];
