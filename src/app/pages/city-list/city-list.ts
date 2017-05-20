@@ -60,7 +60,7 @@ export class CityListPage {
 	// 取消关注
 	itemSelected(weather){
 		this.alertCtrl.create({
-			title: '甜影强',
+			title: '天气',
 			message: '你确定要取消关注该城市的天气信息吗？',
 			buttons: [
 			{
